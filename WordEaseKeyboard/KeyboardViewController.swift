@@ -18,6 +18,7 @@ class KeyboardViewController: UIInputViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("Input view height: \(view.frame.height)")
+        
         setupUI()
     }
 

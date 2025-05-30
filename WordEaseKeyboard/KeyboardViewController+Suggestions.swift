@@ -9,6 +9,7 @@ extension KeyboardViewController {
         suggestionBar.spacing = 8
         suggestionBar.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
+        // Add suggestion buttons
         for i in 0..<3 {
             let button = UIButton(type: .system)
             button.setTitle("", for: .normal)
@@ -21,7 +22,36 @@ extension KeyboardViewController {
             suggestionBar.addArrangedSubview(button)
         }
         
-        return suggestionBar
+        // Add AI feature buttons (placeholders for Phase 2)
+        let aiButtonsStack = UIStackView()
+        aiButtonsStack.axis = .horizontal
+        aiButtonsStack.distribution = .fillEqually
+        aiButtonsStack.spacing = 8
+        
+        let aiFeatures = ["Rewrite", "Formal", "Casual", "Concise", "Expand"]
+        for feature in aiFeatures {
+            let button = UIButton(type: .system)
+            button.setTitle(feature, for: .normal)
+            button.backgroundColor = .systemGray5
+            button.setTitleColor(.label, for: .normal)
+            button.layer.cornerRadius = 5
+            button.addTarget(self, action: #selector(aiFeatureTapped(_:)), for: .touchUpInside)
+            aiButtonsStack.addArrangedSubview(button)
+        }
+        
+        let mainToolbarStack = UIStackView(arrangedSubviews: [suggestionBar, aiButtonsStack])
+        mainToolbarStack.axis = .vertical
+        mainToolbarStack.spacing = 8
+        mainToolbarStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        return mainToolbarStack
+    }
+
+    @objc func aiFeatureTapped(_ sender: UIButton) {
+        guard let feature = sender.titleLabel?.text else { return }
+        print("AI Feature tapped: \(feature)")
+        // Placeholder for AI integration in Phase 2
+        // This will trigger AI rewrite/tone adjustment based on the feature
     }
 
     @objc func suggestionTapped(_ sender: UIButton) {
@@ -78,7 +108,11 @@ extension KeyboardViewController {
     }
 
     func updateSuggestionBar() {
-        guard let suggestionBar = keyboardStack?.arrangedSubviews.first as? UIStackView else { return }
+        // Get the mainToolbarStack which is the first arranged subview of keyboardStack
+        guard let mainToolbarStack = keyboardStack?.arrangedSubviews.first as? UIStackView else { return }
+        
+        // Get the actual suggestionBar which is the first arranged subview of mainToolbarStack
+        guard let suggestionBar = mainToolbarStack.arrangedSubviews.first as? UIStackView else { return }
         
         for i in 0..<3 {
             if let button = suggestionBar.arrangedSubviews[i] as? UIButton {

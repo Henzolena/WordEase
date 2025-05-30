@@ -63,8 +63,8 @@ extension KeyboardViewController {
             keyboardStack.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.padding)
         ])
         
-        let suggestionBar = createSuggestionBar()
-        keyboardStack.addArrangedSubview(suggestionBar)
+        let mainToolbar = createSuggestionBar()
+        keyboardStack.addArrangedSubview(mainToolbar)
         
         if isExtendedSymbolsKeyboard {
             setupExtendedSymbolKeyboard()
@@ -160,42 +160,7 @@ extension KeyboardViewController {
         keyboardStack.addArrangedSubview(symbolsRow1)
         
         let thirdRowKeys = Constants.symbolKeys[2]
-        let symbolsRow2 = UIStackView() // Manually create stack view
-        symbolsRow2.axis = .horizontal
-        symbolsRow2.spacing = Constants.spacing
-        symbolsRow2.distribution = .equalCentering // Changed to equalCentering
-        symbolsRow2.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Add keys
-        for keyString in thirdRowKeys {
-            let button = createButton(title: keyString)
-            if let specialColor = ["#+=": UIColor.systemGray3, "⌫": UIColor.systemGray3][keyString] {
-                button.backgroundColor = specialColor
-            }
-            
-            let keyWidth: CGFloat
-            switch keyString {
-            case "#+=":
-                keyWidth = Constants.deleteKeyWidth // Changed to match delete button width
-            case "⌫":
-                keyWidth = Constants.deleteKeyWidth
-            default:
-                keyWidth = Constants.standardKeyWidth
-            }
-            
-            let widthConstraint = button.widthAnchor.constraint(equalToConstant: keyWidth)
-            widthConstraint.priority = UILayoutPriority.required
-            widthConstraint.isActive = true
-            
-            symbolsRow2.addArrangedSubview(button) // Add button directly
-            
-            if keyString == "⌫" {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    print("Delete button frame in symbol keyboard: \(button.frame)")
-                }
-            }
-        }
-        
+        let symbolsRow2 = addKeyRow(keys: thirdRowKeys, specialKeys: ["#+=": UIColor.systemGray3, "⌫": UIColor.systemGray3], useFillEqually: true)
         keyboardStack.addArrangedSubview(symbolsRow2)
         
         let bottomRow = addKeyRow(keys: Constants.symbolKeys[3],
@@ -226,41 +191,7 @@ extension KeyboardViewController {
         keyboardStack.addArrangedSubview(symbolsRow2)
         
         let thirdRowKeys = Constants.extendedSymbolKeys[2]
-        let controlRow = UIStackView() // Manually create stack view
-        controlRow.axis = .horizontal
-        controlRow.spacing = Constants.spacing
-        controlRow.distribution = .equalCentering // Changed to equalCentering
-        controlRow.translatesAutoresizingMaskIntoConstraints = false
-        
-        for keyString in thirdRowKeys {
-            let button = createButton(title: keyString)
-            if let specialColor = ["123": UIColor.systemGray3, "⌫": UIColor.systemGray3][keyString] {
-                button.backgroundColor = specialColor
-            }
-            
-            let keyWidth: CGFloat
-            switch keyString {
-            case "123":
-                keyWidth = Constants.deleteKeyWidth // Changed to match delete button width
-            case "⌫":
-                keyWidth = Constants.deleteKeyWidth
-            default:
-                keyWidth = Constants.standardKeyWidth
-            }
-            
-            let widthConstraint = button.widthAnchor.constraint(equalToConstant: keyWidth)
-            widthConstraint.priority = UILayoutPriority.required
-            widthConstraint.isActive = true
-            
-            controlRow.addArrangedSubview(button) // Add button directly
-            
-            if keyString == "⌫" {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    print("Delete button frame in extended symbol keyboard: \(button.frame)")
-                }
-            }
-        }
-        
+        let controlRow = addKeyRow(keys: thirdRowKeys, specialKeys: ["123": UIColor.systemGray3, "⌫": UIColor.systemGray3], useFillEqually: true)
         keyboardStack.addArrangedSubview(controlRow)
         
         let bottomRow = addKeyRow(keys: Constants.extendedSymbolKeys[3],
